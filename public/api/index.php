@@ -44,6 +44,7 @@ if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
 // Simple router
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$path = explode('api/',$path)[1];
 $path = preg_replace('#/api/#', '', $path);
 
 try {
