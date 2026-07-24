@@ -237,7 +237,7 @@ try {
             respondJson(['success' => true, 'data' => $result]);
             break;
 
-        case preg_match('#^admin/moderators/assign$#', $path) && $method === 'POST':
+        case $path === 'admin/moderators/assign' && $method === 'POST':
             $user = $authMiddleware->requireAdmin();
             $data = json_decode(file_get_contents('php://input'), true);
             
