@@ -1,0 +1,153 @@
+// Configuração da API - Altere conforme necessário
+const API_BASE_URL = 'http://localhost:3000';
+
+// Funções de utilidade
+function showMessage(elementId, message, type) {
+    const messageEl = document.getElementById(elementId);
+    if (messageEl) {
+        messageEl.textContent = message;
+        messageEl.className = `message ${type}`;
+        setTimeout(() => {
+            messageEl.className = 'message';
+        }, 5000);
+    }
+}
+
+function getToken() {
+    return localStorage.getItem('authToken');
+}
+
+function setToken(token) {
+    localStorage.setItem('authToken', token);
+}
+
+function getUserInfo() {
+    const userInfo = localStorage.getItem('userInfo');
+    return userInfo ? JSON.parse(userInfo) : null;
+}
+
+function setUserInfo(user) {
+    localStorage.setItem('userInfo', JSON.stringify(user));
+}
+
+function clearAuth() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userInfo');
+}
+
+function isAuthenticated() {
+    return !!getToken();
+}
+
+function redirectToLogin() {
+    window.location.href = 'index.html';
+}
+
+// Login Form Handler
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setToken(data.token);
+                setUserInfo(data.user);
+                showMessage('message', 'Login realizado com sucesso!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                showMessage('message', data.message || 'Erro ao fazer login', 'error');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            showMessage('message', 'Erro de conexão. Verifique se a API está rodando.', 'error');
+        }
+    });
+}
+
+// Register Form Handler
+const registerForm = document.getElementById('registerForm');
+if (registerForm) {
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (password !== confirmPassword) {
+            showMessage('message', 'As senhas não coincidem', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage('message', 'Cadastro realizado com sucesso! Redirecionando...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            } else {
+                showMessage('message', data.message || 'Erro ao cadastrar', 'error');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            showMessage('message', 'Erro de conexão. Verifique se a API está rodando.', 'error');
+        }
+    });
+}
+
+// Logout Handler
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        clearAuth();
+        window.location.href = 'index.html';
+    });
+}
+
+// Proteção de páginas autenticadas
+function checkAuth() {
+    const currentPage = window.location.pathname.split('/').pop();
+    const isAuthPage = currentPage === 'index.html' || currentPage === 'register.html' || currentPage === '';
+    
+    if (!isAuthenticated() && !isAuthPage) {
+        redirectToLogin();
+        return false;
+    }
+    
+    if (isAuthenticated() && isAuthPage) {
+        window.location.href = 'dashboard.html';
+        return false;
+    }
+    
+    return true;
+}
+
+// Executa verificação de autenticação
+checkAuth();
