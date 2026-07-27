@@ -1,4 +1,7 @@
 ```
+# Config
+config/
+
 # Dependencies
 node_modules/
 
