@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema de Resumos</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Sistema de Resumos</div>
+        <div class="nav-user">
+            <span id="userName">Usuário</span>
+            <button id="logoutBtn" class="btn-secondary">Sair</button>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <ul class="menu">
+                <li><a href="#" class="active">Visão Geral</a></li>
+                <li><a href="#">Meus Resumos</a></li>
+                <li><a href="#">Perfil</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <h1>Bem-vindo ao Dashboard</h1>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Resumos Enviados</h3>
+                    <p id="totalAbstracts">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Pendentes</h3>
+                    <p id="pendingAbstracts">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Aprovados</h3>
+                    <p id="approvedAbstracts">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Status do Pagamento</h3>
+                    <p id="paymentStatus">-</p>
+                </div>
+            </div>
+
+            <section class="recent-section">
+                <h2>Últimos Resumos</h2>
+                <div id="abstractsList" class="abstracts-list">
+                    <p>Carregando resumos...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
