@@ -22,7 +22,16 @@ class AuthMiddleware
      */
     public function handle(): ?array
     {
-        $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+        // Try multiple possible locations for the Authorization header
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'] 
+                    ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] 
+                    ?? ($_SERVER['HTTP_X_AUTHORIZATION'] ?? '');
+        
+        // Fallback: manually parse headers if available
+        if (empty($authHeader) && function_exists('getallheaders')) {
+            $headers = getallheaders();
+            $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+        }
         
         if (empty($authHeader)) {
             return null;
