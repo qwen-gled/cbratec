@@ -21,11 +21,13 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Senha:</label>
-                    <input type="password" id="password" name="password" required minlength="6" placeholder="Mínimo 6 caracteres">
+                    <input type="password" id="password" name="password" required minlength="8" placeholder="Mínimo 8 caracteres">
+                    <small id="passwordError" class="error-message"></small>
                 </div>
                 <div class="form-group">
                     <label for="confirmPassword">Confirmar Senha:</label>
                     <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Repita a senha">
+                    <small id="confirmPasswordError" class="error-message"></small>
                 </div>
                 <div class="form-group">
                     <label for="date_of_birth">Data de Nascimento:</label>

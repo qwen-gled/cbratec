@@ -96,8 +96,31 @@ if (registerForm) {
         const institution = document.getElementById('institution').value;
         const category = document.getElementById('category').value;
 
+        // Limpar mensagens de erro anteriores
+        const passwordErrorEl = document.getElementById('passwordError');
+        const confirmPasswordErrorEl = document.getElementById('confirmPasswordError');
+        if (passwordErrorEl) passwordErrorEl.textContent = '';
+        if (confirmPasswordErrorEl) confirmPasswordErrorEl.textContent = '';
+
+        let hasError = false;
+
+        // Validar tamanho da senha (mínimo 8 caracteres)
+        if (password.length < 8) {
+            if (passwordErrorEl) {
+                passwordErrorEl.textContent = 'A senha deve ter pelo menos 8 caracteres.';
+            }
+            hasError = true;
+        }
+
+        // Validar se as senhas coincidem
         if (password !== confirmPassword) {
-            showMessage('message', 'As senhas não coincidem', 'error');
+            if (confirmPasswordErrorEl) {
+                confirmPasswordErrorEl.textContent = 'As senhas não coincidem.';
+            }
+            hasError = true;
+        }
+
+        if (hasError) {
             return;
         }
 
@@ -127,7 +150,9 @@ if (registerForm) {
                     window.location.href = 'index.html';
                 }, 2000);
             } else {
-                showMessage('message', data.message || 'Erro ao cadastrar', 'error');
+                // Exibe mensagem de erro detalhada retornada pela API
+                const errorMessage = data.message || data.error || 'Erro ao cadastrar. Verifique os dados informados.';
+                showMessage('message', errorMessage, 'error');
             }
         } catch (error) {
             console.error('Erro:', error);
