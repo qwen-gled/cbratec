@@ -26,7 +26,12 @@
 
         <main class="content">
             <h1>Bem-vindo ao Dashboard</h1>
-            
+
+            <!-- Alerta de Pagamento Pendente -->
+            <div id="paymentAlert" class="alert alert-warning" style="display: none;">
+                <strong>Atenção!</strong> Seu pagamento está pendente. Você precisa ter o pagamento aprovado para enviar novos resumos.
+            </div>
+
             <div class="stats-grid">
                 <div class="stat-card">
                     <h3>Resumos Enviados</h3>
@@ -46,13 +51,52 @@
                 </div>
             </div>
 
+            <!-- Formulário de Envio de Resumo -->
+            <section id="submitSection" class="recent-section" style="display: none;">
+                <h2>Enviar Novo Resumo</h2>
+                <form id="abstractForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="title">Título do Resumo</label>
+                        <input type="text" id="title" name="title" required placeholder="Digite o título do resumo">
+                    </div>
+                    <div class="form-group">
+                        <label for="area_id">Área</label>
+                        <select id="area_id" name="area_id" required>
+                            <option value="">Selecione uma área</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="file">Arquivo PDF</label>
+                        <input type="file" id="file" name="file" accept=".pdf" required>
+                        <small>O arquivo deve estar no formato PDF.</small>
+                    </div>
+                    <button type="submit" class="btn-primary">Enviar Resumo</button>
+                </form>
+                <div id="formMessage" class="message"></div>
+            </section>
+
             <section class="recent-section">
-                <h2>Últimos Resumos</h2>
+                <h2>Meus Resumos</h2>
                 <div id="abstractsList" class="abstracts-list">
                     <p>Carregando resumos...</p>
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Modal de Histórico -->
+    <div id="historyModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Histórico do Resumo</h2>
+                <button class="close-btn" onclick="closeHistoryModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="historyContent">
+                    <p>Carregando histórico...</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="js/app.js"></script>
