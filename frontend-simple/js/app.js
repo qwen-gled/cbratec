@@ -7,9 +7,13 @@ function showMessage(elementId, message, type) {
     if (messageEl) {
         messageEl.textContent = message;
         messageEl.className = `message ${type}`;
-        setTimeout(() => {
-            messageEl.className = 'message';
-        }, 5000);
+        // Remove a mensagem após 5 segundos se houver conteúdo
+        if (message) {
+            setTimeout(() => {
+                messageEl.textContent = '';
+                messageEl.className = 'message';
+            }, 5000);
+        }
     }
 }
 
@@ -151,7 +155,8 @@ if (registerForm) {
                 }, 2000);
             } else {
                 // Exibe mensagem de erro detalhada retornada pela API
-                const errorMessage = data.message || data.error || 'Erro ao cadastrar. Verifique os dados informados.';
+                // A API retorna erros no campo 'error' (ex: "E-mail já cadastrado")
+                const errorMessage = data.error || 'Erro ao cadastrar. Verifique os dados informados.';
                 showMessage('message', errorMessage, 'error');
             }
         } catch (error) {
