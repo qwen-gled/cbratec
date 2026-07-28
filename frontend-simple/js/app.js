@@ -18,11 +18,14 @@ function showMessage(elementId, message, type) {
 }
 
 function getToken() {
-    return localStorage.getItem('authToken');
+    return localStorage.getItem('accessToken');
 }
 
-function setToken(token) {
-    localStorage.setItem('authToken', token);
+function setToken(accessToken, refreshToken) {
+    localStorage.setItem('accessToken', accessToken);
+    if (refreshToken) {
+        localStorage.setItem('refreshToken', refreshToken);
+    }
 }
 
 function getUserInfo() {
@@ -35,7 +38,8 @@ function setUserInfo(user) {
 }
 
 function clearAuth() {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('userInfo');
 }
 
@@ -68,14 +72,15 @@ if (loginForm) {
             const data = await response.json();
 
             if (response.ok) {
-                setToken(data.token);
+                // API retorna access_token e refresh_token
+                setToken(data.access_token, data.refresh_token);
                 
                 // Buscar dados completos do usuário via endpoint /auth/me
                 try {
                     const meResponse = await fetch(`${API_BASE_URL}/auth/me`, {
                         method: 'GET',
                         headers: {
-                            'Authorization': `Bearer ${data.token}`,
+                            'Authorization': `Bearer ${data.access_token}`,
                             'Content-Type': 'application/json'
                         }
                     });
