@@ -69,7 +69,25 @@ if (loginForm) {
 
             if (response.ok) {
                 setToken(data.token);
-                setUserInfo(data.user);
+                
+                // Buscar dados completos do usuário via endpoint /auth/me
+                try {
+                    const meResponse = await fetch(`${API_BASE_URL}/auth/me`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${data.token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (meResponse.ok) {
+                        const userData = await meResponse.json();
+                        setUserInfo(userData.user || userData);
+                    }
+                } catch (meError) {
+                    console.error('Erro ao buscar dados do usuário:', meError);
+                }
+                
                 showMessage('message', 'Login realizado com sucesso!', 'success');
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
