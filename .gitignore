@@ -6,12 +6,22 @@ __pycache__/
 *.obj
 dist/
 build/
+*.class
+*.exe
+*.dll
+*.so
+*.a
+*.out
 target/
 
 # Dependencies
 .venv/
 venv/
 node_modules/
+target/
+.gradle/
+.mypy_cache/
+.pytest_cache/
 .julia/
 .zig-cache/
 
@@ -24,6 +34,12 @@ node_modules/
 # Environment
 .env
 .env.local
+.env.*
+
+
+# Environment
+.env
+.env.local
 *.env.*
 
 # Editors
@@ -31,6 +47,15 @@ node_modules/
 .idea/
 *.swp
 *.swo
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
 
 # System
 .DS_Store
@@ -73,5 +98,6 @@ __pycache__/
 *.tar.gz
 *.tar.bz2
 *.tar.xz
+*.tar.zst
 *.tar.zst
 ```

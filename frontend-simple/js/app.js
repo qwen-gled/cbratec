@@ -86,10 +86,15 @@ if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const name = document.getElementById('name').value;
+        const full_name = document.getElementById('full_name').value;
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
+        const date_of_birth = document.getElementById('date_of_birth').value;
+        const document_number = document.getElementById('document_number').value;
+        const country = document.getElementById('country').value;
+        const institution = document.getElementById('institution').value;
+        const category = document.getElementById('category').value;
 
         if (password !== confirmPassword) {
             showMessage('message', 'As senhas não coincidem', 'error');
@@ -102,7 +107,16 @@ if (registerForm) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name, email, password })
+                body: JSON.stringify({ 
+                    email, 
+                    password, 
+                    full_name, 
+                    date_of_birth, 
+                    document_number, 
+                    country, 
+                    institution, 
+                    category 
+                })
             });
 
             const data = await response.json();
