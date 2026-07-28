@@ -87,10 +87,23 @@ if (loginForm) {
                     
                     if (meResponse.ok) {
                         const userData = await meResponse.json();
+                        // A API pode retornar o usuário em userData.user ou diretamente em userData
                         setUserInfo(userData.user || userData);
+                    } else if (meResponse.status === 401) {
+                        // Token inválido ou expirado
+                        console.error('Token inválido ou expirado');
+                        clearAuth();
+                        showMessage('message', 'Sessão expirada. Faça login novamente.', 'error');
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 2000);
+                        return;
+                    } else {
+                        console.error('Erro ao buscar dados do usuário:', meResponse.status, meResponse.statusText);
                     }
                 } catch (meError) {
                     console.error('Erro ao buscar dados do usuário:', meError);
+                    showMessage('message', 'Erro ao carregar dados do usuário.', 'error');
                 }
                 
                 showMessage('message', 'Login realizado com sucesso!', 'success');
