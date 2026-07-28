@@ -73,43 +73,55 @@ if (loginForm) {
 
             if (response.ok) {
                 // API retorna access_token e refresh_token
-                setToken(data.access_token, data.refresh_token);
+                const accessToken = data.access_token;
+                const refreshToken = data.refresh_token;
+                
+                if (!accessToken) {
+                    showMessage('message', 'Erro: Token não recebido da API.', 'error');
+                    return;
+                }
+                
+                // Salvar tokens imediatamente
+                setToken(accessToken, refreshToken);
                 
                 // Buscar dados completos do usuário via endpoint /auth/me
+                // Usar o token já salvo para garantir consistência
                 try {
                     const meResponse = await fetch(`${API_BASE_URL}/auth/me`, {
                         method: 'GET',
                         headers: {
-                            'Authorization': `Bearer ${data.access_token}`,
+                            'Authorization': `Bearer ${accessToken}`,
                             'Content-Type': 'application/json'
                         }
                     });
                     
                     if (meResponse.ok) {
                         const userData = await meResponse.json();
-                        // A API pode retornar o usuário em userData.user ou diretamente em userData
-                        setUserInfo(userData.user || userData);
+                        // A API retorna o usuário em userData.data
+                        const userInfo = userData.data || userData.user || userData;
+                        setUserInfo(userInfo);
+                        
+                        showMessage('message', 'Login realizado com sucesso!', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1000);
                     } else if (meResponse.status === 401) {
                         // Token inválido ou expirado
-                        console.error('Token inválido ou expirado');
+                        console.error('Token inválido ou expirado ao buscar /auth/me');
                         clearAuth();
-                        showMessage('message', 'Sessão expirada. Faça login novamente.', 'error');
+                        showMessage('message', 'Sessão expirada. Tente fazer login novamente.', 'error');
                         setTimeout(() => {
                             window.location.href = 'index.html';
                         }, 2000);
-                        return;
                     } else {
-                        console.error('Erro ao buscar dados do usuário:', meResponse.status, meResponse.statusText);
+                        const errorData = await meResponse.json().catch(() => ({}));
+                        console.error('Erro ao buscar dados do usuário:', meResponse.status, errorData);
+                        showMessage('message', errorData.message || 'Erro ao carregar dados do usuário.', 'error');
                     }
                 } catch (meError) {
-                    console.error('Erro ao buscar dados do usuário:', meError);
-                    showMessage('message', 'Erro ao carregar dados do usuário.', 'error');
+                    console.error('Erro de conexão ao buscar /auth/me:', meError);
+                    showMessage('message', 'Erro de conexão ao carregar dados do usuário.', 'error');
                 }
-                
-                showMessage('message', 'Login realizado com sucesso!', 'success');
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
             } else {
                 showMessage('message', data.message || 'Erro ao fazer login', 'error');
             }
